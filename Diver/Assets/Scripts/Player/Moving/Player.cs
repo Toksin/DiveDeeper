@@ -65,6 +65,8 @@ public class Player : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, 0);
         rb.AddForce(Vector2.up * jumpSpeed, ForceMode2D.Impulse);
         jumpTimer = 0;
+
+       // StartCoroutine(JumpSqueeze(0.5f, 1.1f, 0.1f));
        
     }
 
@@ -72,7 +74,7 @@ public class Player : MonoBehaviour
     {
         rb.AddForce(Vector2.right * horizontal * moveSpeed);
 
-      //  animator.SetFloat("horizontal", Mathf.Abs(rb.velocity.x));
+        animator.SetFloat("horizontal", Mathf.Abs(rb.velocity.x));
 
         if(horizontal > 0 && !facingRight || (horizontal < 0 && facingRight))
         {
@@ -124,7 +126,28 @@ public class Player : MonoBehaviour
         facingRight = !facingRight;
 
         transform.rotation = Quaternion.Euler(0f, facingRight ? 0 : 180, 0f);
-    }   
+    }
+
+    //IEnumerator JumpSqueeze(float xSqueeze, float ySqueeze, float seconds)
+    //{
+    //    Vector3 originalSize = Vector3.one;
+    //    Vector3 newSize = new Vector3(xSqueeze, ySqueeze, originalSize.z);
+    //    float t = 0f;
+    //    while (t <= 1.0)
+    //    {
+    //        t += Time.deltaTime / seconds;
+    //        characterHolder.transform.localScale = Vector3.Lerp(originalSize, newSize, t);
+    //        yield return null;
+    //    }
+    //    t = 0f;
+    //    while (t <= 1.0)
+    //    {
+    //        t += Time.deltaTime / seconds;
+    //        characterHolder.transform.localScale = Vector3.Lerp(newSize, originalSize, t);
+    //        yield return null;
+    //    }
+
+    //}
 
     private void OnDrawGizmos()
     {
