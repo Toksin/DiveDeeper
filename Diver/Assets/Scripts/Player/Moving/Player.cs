@@ -26,11 +26,17 @@ public class Player : MonoBehaviour
     [SerializeField] private float linearDrag = 4.0f;
     [SerializeField] private float gravity = 1;
     [SerializeField] private float fallMultiplier = 5.0f;
+    
 
     [Header("Коллизия")]
-    [SerializeField] private bool onGround = false;
+    [SerializeField] public bool onGround = false;
     [SerializeField] private float groundLength = 0.6f;
     [SerializeField] private Vector3 colliderOffset;
+
+    [Header("Физика крюка")]
+    public Vector2 ropeHook;
+    public float swingForce = 4f;
+    public bool isSwinging;
 
 
     void Update()
@@ -58,6 +64,9 @@ public class Player : MonoBehaviour
         if(FindFirstObjectByType<InteractionSystem>().isExamining)
             can = false;
 
+        //if (FindFirstObjectByType<InventorySystem>().isOpen)
+        //    can = false;
+
         return can;
     }
 
@@ -66,14 +75,47 @@ public class Player : MonoBehaviour
         if (!CanMove())
             return;
 
-        moveCharacter(direction.x);
-
-        if(jumpTimer > Time.time && onGround) 
+        if (isSwinging)
         {
-            Jump();
-        }
+            rb.mass = 0.5f;
 
-        ModifyPhysics();
+            // Code for swinging behavior
+            // This part should be integrated into your existing FixedUpdate function
+
+            // 1 - получаем нормализованный вектор направления от игрока к точке крюка
+            var playerToHookDirection = (ropeHook - (Vector2)transform.position).normalized;
+
+            // 2 - Инвертируем направление, чтобы получить перпендикулярное направление
+            Vector2 perpendicularDirection;
+            if (direction.x < 0)
+            {
+                perpendicularDirection = new Vector2(-playerToHookDirection.y, playerToHookDirection.x);
+                var leftPerpPos = (Vector2)transform.position - perpendicularDirection * -2f;
+                Debug.DrawLine(transform.position, leftPerpPos, Color.green, 0f);
+            }
+            else
+            {
+                perpendicularDirection = new Vector2(playerToHookDirection.y, -playerToHookDirection.x);
+                var rightPerpPos = (Vector2)transform.position + perpendicularDirection * 2f;
+                Debug.DrawLine(transform.position, rightPerpPos, Color.green, 0f);
+            }
+
+            var force = perpendicularDirection * swingForce;
+            rb.AddForce(force, ForceMode2D.Force);
+        }
+        else
+        {
+            rb.mass = 1f;
+
+            moveCharacter(direction.x);
+
+            if (jumpTimer > Time.time && onGround)
+            {
+                Jump();
+            }
+
+            ModifyPhysics();
+        }
     }
 
     void Jump()

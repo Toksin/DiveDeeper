@@ -2,10 +2,10 @@ using UnityEngine;
 using UnityEngine.UI;
 
 public class LifeCount : MonoBehaviour
-{
-    public Image[] lifes;
+{  
     public int livesRemaining;
-    
+    public Image[] lifes;   
+
     public void LoseLife()
     {
         if (livesRemaining == 0)
@@ -20,12 +20,25 @@ public class LifeCount : MonoBehaviour
         }
     }
 
+    public void RestoreLife()
+    {       
+
+        lifes[livesRemaining].enabled = true;
+        livesRemaining++;
+    }
+
     void Update()
     {
         if(Input.GetKeyDown(KeyCode.L)) 
         {
             LoseLife();
-        }
+        }        
     }
+
+    //private void Start()
+    //{
+    //    lifes = new Image[maxLives];
+    //    livesRemaining = maxLives;
+    //}
 
 }

@@ -14,9 +14,6 @@ public class InteractionSystem : MonoBehaviour
     [Header("Компоненты")]
     public GameObject detectedObject;
 
-    [Header("Предметы")]
-    public List<GameObject> pickedItems = new List<GameObject>();
-
     [Header("Компоненты системы описания предметов")]
     public GameObject examineWindow;
     public Image examineImage;
@@ -42,11 +39,7 @@ public class InteractionSystem : MonoBehaviour
             return true;
         }
     }
-
-    public void PickUpItem(GameObject item)
-    {
-        pickedItems.Add(item);
-    }
+  
 
     public void ExamineItem(Item item)
     {

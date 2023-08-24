@@ -8,13 +8,18 @@ public class Item : MonoBehaviour
 {
 
     public enum InteractionType { NONE,PickUp,Examine}
-    public InteractionType type;
+    public enum ItemType { Static, Consumables}
+
+    [Header("Атрибуты")]
+    public InteractionType interactType;    
+    public ItemType itemType;
 
     [Header("Описание")]
     public string descriptionText;
 
     [Header("События")]
     public UnityEvent customEvent;
+    public UnityEvent consumeEvent;
 
     private void Reset()
     {
@@ -31,11 +36,11 @@ public class Item : MonoBehaviour
 
    public void Interact()
    {
-        switch (type)
+        switch (interactType)
         {
             case InteractionType.PickUp:
                // GameObject item = gameObject;
-                FindFirstObjectByType<InteractionSystem>().PickUpItem(gameObject);      
+                FindFirstObjectByType<InventorySystem>().PickUp(gameObject);      
                 gameObject.SetActive(false);
                 break;
             case InteractionType.Examine:
@@ -48,6 +53,6 @@ public class Item : MonoBehaviour
         }
 
         customEvent.Invoke();
-   }   
- 
+   } 
+
 }
