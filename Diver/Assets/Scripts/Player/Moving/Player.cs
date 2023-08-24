@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+
     [Header("Движение по горизонтали")]
     [SerializeField] private float moveSpeed = 10.0f;
     [SerializeField] private Vector2 direction;
@@ -31,9 +32,11 @@ public class Player : MonoBehaviour
     [SerializeField] private float groundLength = 0.6f;
     [SerializeField] private Vector3 colliderOffset;
 
- 
+
     void Update()
-    {       
+    {
+        if (!CanMove())        
+            return;     
 
         onGround = Physics2D.Raycast(transform.position + colliderOffset, Vector2.down, groundLength, groundLayer) || Physics2D.Raycast(transform.position - colliderOffset, Vector2.down, groundLength, groundLayer);
 
@@ -48,8 +51,21 @@ public class Player : MonoBehaviour
         
     }
 
+    bool CanMove()
+    {
+        bool can = true;
+
+        if(FindFirstObjectByType<InteractionSystem>().isExamining)
+            can = false;
+
+        return can;
+    }
+
     private void FixedUpdate()
     {
+        if (!CanMove())
+            return;
+
         moveCharacter(direction.x);
 
         if(jumpTimer > Time.time && onGround) 
@@ -72,6 +88,9 @@ public class Player : MonoBehaviour
 
     void moveCharacter(float horizontal)
     {
+        if (!CanMove())
+            return;
+
         rb.AddForce(Vector2.right * horizontal * moveSpeed);
 
         animator.SetFloat("horizontal", Mathf.Abs(rb.velocity.x));
