@@ -7,7 +7,7 @@ using UnityEngine.Events;
 public class Item : MonoBehaviour
 {
 
-    public enum InteractionType { NONE,PickUp,Examine}
+    public enum InteractionType { NONE,PickUp,Examine, GrabDrop}
     public enum ItemType { Static, Consumables}
 
     [Header("Атрибуты")]
@@ -43,9 +43,14 @@ public class Item : MonoBehaviour
                 FindFirstObjectByType<InventorySystem>().PickUp(gameObject);      
                 gameObject.SetActive(false);
                 break;
+
             case InteractionType.Examine:
                 FindFirstObjectByType<InteractionSystem>().ExamineItem(this);
                 break;
+            case InteractionType.GrabDrop:
+                FindFirstObjectByType<InteractionSystem>().GrabDrop();
+                break;
+
 
             default:
                 Debug.Log("Null item");

@@ -4,7 +4,9 @@ using UnityEngine.UI;
 public class LifeCount : MonoBehaviour
 {  
     public int livesRemaining;
-    public Image[] lifes;   
+    public Image[] lifes;
+
+    public int attemptRemain = 3;
 
     public void LoseLife()
     {
@@ -16,7 +18,9 @@ public class LifeCount : MonoBehaviour
 
         if(livesRemaining == 0)
         {
-            Debug.Log("GG");
+            FindFirstObjectByType<Player>().Die();
+            attemptRemain--;
+
         }
     }
 

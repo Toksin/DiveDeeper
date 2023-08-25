@@ -7,6 +7,14 @@ using Unity.VisualScripting;
 
 public class InventorySystem : MonoBehaviour
 {
+    public static InventorySystem inventorySystem;
+
+    private void Awake()
+    {
+        inventorySystem = this;
+    }
+
+
     public List<GameObject> items = new List<GameObject>();
 
     [Header("Компоненты")]
@@ -26,7 +34,7 @@ public class InventorySystem : MonoBehaviour
          UpdateUI();
     }
 
-    private void UpdateUI()
+    public void UpdateUI()
     {
         HideAll();
         for (int i = 0; i < items.Count; i++)

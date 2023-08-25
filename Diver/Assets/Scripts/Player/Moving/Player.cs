@@ -38,6 +38,8 @@ public class Player : MonoBehaviour
     public float swingForce = 4f;
     public bool isSwinging;
 
+    public bool isDead = false;
+
 
     void Update()
     {
@@ -66,6 +68,9 @@ public class Player : MonoBehaviour
 
         //if (FindFirstObjectByType<InventorySystem>().isOpen)
         //    can = false;
+
+        if(isDead) 
+            can = false;
 
         return can;
     }
@@ -216,5 +221,21 @@ public class Player : MonoBehaviour
         Gizmos.DrawLine(transform.position + colliderOffset, transform.position + colliderOffset + Vector3.down * groundLength);
         Gizmos.DrawLine(transform.position - colliderOffset, transform.position - colliderOffset + Vector3.down * groundLength);
 
+    }
+
+    public void Die()
+    {
+        isDead = true;
+        FindFirstObjectByType<LevelManager>().Restart();
+    }
+
+    public void ResetPlayer()
+    {
+        rb.velocity = Vector2.zero; // Reset velocity to zero
+        rb.gravityScale = gravity;  // Reset gravity scale
+        rb.drag = linearDrag;       // Reset drag
+
+        isDead = false;             // Reset death state
+        direction = Vector2.zero;   // Reset movement direction
     }
 }

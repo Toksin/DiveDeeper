@@ -20,14 +20,22 @@ public class InteractionSystem : MonoBehaviour
     public TMP_Text examineText;
     public bool isExamining;
 
+    [Header("Компоненты для поднятия предметов")]
+    public bool isGrabbing;
+    public GameObject grabbedObject;
+    public float grabbedObjectYValue;
+    public Transform grabPoint;
+
     bool InteractInput()
     {
         return Input.GetKeyDown(KeyCode.E);
     }   
 
     bool DetectObject()
-    {      
-       Collider2D obj = Physics2D.OverlapCircle(detectionPoint.position, detectionRadius, detectionLayer); 
+    {       
+           
+
+        Collider2D obj = Physics2D.OverlapCircle(detectionPoint.position, detectionRadius, detectionLayer); 
         if(obj == null)
         {
             detectedObject = null;
@@ -60,13 +68,38 @@ public class InteractionSystem : MonoBehaviour
        
     }
 
+    public void GrabDrop()
+    {
+        if(isGrabbing)
+        {
+            isGrabbing = false;
+            grabbedObject.transform.parent = null;
+            grabbedObject.transform.position = new Vector3(grabbedObject.transform.position.x, grabbedObjectYValue, grabbedObject.transform.position.z);
+            grabbedObject = null;
+        }
+        else
+        {
+            isGrabbing = true;
+            grabbedObject = detectedObject;
+            grabbedObject.transform.parent = transform;
+            grabbedObjectYValue = grabbedObject.transform.position.y;
+            grabbedObject.transform.localPosition = grabPoint.localPosition;
+        }
+    }
+
     void Update()
     {
         if (DetectObject())
         {
             if(InteractInput())
             {
+                if (isGrabbing)
+                {
+                    GrabDrop();
+                    return;
+                }
                 detectedObject.GetComponent<Item>().Interact();
+                AudioManager.instance.PlaySFX("take");
             }
         }
     }   

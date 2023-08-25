@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class RopeSystem : MonoBehaviour
 {
@@ -26,6 +27,7 @@ public class RopeSystem : MonoBehaviour
 
     public float climbSpeed = 3f;
     private bool isColliding;
+ 
 
     void Awake()
     {
@@ -95,11 +97,18 @@ public class RopeSystem : MonoBehaviour
             }
         }
 
+        
+
+
+
         HandleInput(aimDirection);
         UpdateRopePositions();
         HandleRopeLength();
         HandleRopeUnwrap();
     }
+
+  
+
 
     private void SetCrosshairPosition(float aimAngle)
     {
@@ -117,7 +126,7 @@ public class RopeSystem : MonoBehaviour
 
     private void HandleInput(Vector2 aimDirection)
     {
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && !FindFirstObjectByType<InventorySystem>().isOpen)
         {
             // 2
             if (ropeAttached) return;
