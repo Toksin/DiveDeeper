@@ -6,7 +6,7 @@ public class EndingGame : MonoBehaviour
     [SerializeField] private int gems = 10;
 
     [Header("Колличевство принесенных игроком")]
-    [SerializeField] private int gemsFromPlayer = 0;
+    [SerializeField] public int gemsFromPlayer = 0;
 
 
 
